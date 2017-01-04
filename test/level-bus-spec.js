@@ -5,6 +5,7 @@ const LevelUp = require('levelup');
 const MemDown = require('memdown');
 const bytewise = require('bytewise');
 const async = require('async');
+const rm = require('rimraf');
 
 const LevelBus = require('../lib/level-bus');
 
@@ -594,6 +595,17 @@ describe("LevelBus", function() {
         async.times(count, (i) => {
             r.dispatch('channel_1', {item: i});
         });
+
+    });
+
+    it('should work with leveldown', function(done) {
+        var db = "/tmp/level-view-test";
+        expect(fs.existsSync(db)).to.be.false;
+
+        var r = new LevelBus({datadir: db});
+
+        expect(fs.existsSync(db)).to.be.true;
+        rm(db, done);
 
     });
 });
